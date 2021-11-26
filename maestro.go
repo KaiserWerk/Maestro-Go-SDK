@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -15,7 +14,6 @@ type (
 	Client struct {
 		baseUrl   string
 		authToken string
-		pingToken string
 		id        string
 		client    *http.Client
 	}
@@ -32,8 +30,7 @@ type (
 )
 
 const (
-	authHeader = "X-Discovery-Token"
-	pingHeader = "X-Ping-Token"
+	authHeader = "X-Registry-Token"
 
 	apiPrefix = "/api/v1"
 
@@ -90,13 +87,6 @@ func (c *Client) Register(address string) error {
 	if resp.StatusCode >= 400 {
 		return fmt.Errorf("received non-success status code (%d)", resp.StatusCode)
 	}
-
-	pingToken, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	c.pingToken = string(pingToken)
 
 	return nil
 }
@@ -156,7 +146,7 @@ func (c *Client) ping() error {
 		return err
 	}
 
-	req.Header.Add(pingHeader, c.pingToken)
+	c.addAuthHeader(req)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
