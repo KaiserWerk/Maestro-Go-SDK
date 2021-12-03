@@ -124,7 +124,7 @@ func (c *Client) Deregister() error {
 }
 
 // StartPing pings the Maestro instance at the supplied interval. Should be started
-// as a goroutine. Can be stopped via the context's `Cancel` function.
+// as a goroutine. Can be stopped via the context's Cancel function.
 func (c *Client) StartPing(ctx context.Context, interval time.Duration) {
 	t := time.NewTicker(interval)
 	for {
