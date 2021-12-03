@@ -141,7 +141,7 @@ func (c *Client) StartPing(ctx context.Context, interval time.Duration) {
 }
 
 func (c *Client) ping() error {
-	req, err := http.NewRequest(http.MethodPut, c.getUrl(ping), nil)
+	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("%s?id=%s", c.getUrl(ping), c.id), nil)
 	if err != nil {
 		return err
 	}
@@ -192,5 +192,3 @@ func (c *Client) addAuthHeader(r *http.Request) {
 func (c *Client) getUrl(r Route) string {
 	return c.baseUrl + apiPrefix + string(r)
 }
-
-
