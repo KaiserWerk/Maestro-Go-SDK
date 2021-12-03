@@ -103,7 +103,7 @@ func (c *Client) Deregister() error {
 		return err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, c.getUrl(deregister), bytes.NewBuffer(regJson))
+	req, err := http.NewRequest(http.MethodDelete, c.getUrl(deregister), bytes.NewBuffer(regJson))
 	if err != nil {
 		return err
 	}
