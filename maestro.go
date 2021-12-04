@@ -37,7 +37,7 @@ const (
 	register   Route = "/register"
 	deregister Route = "/deregister"
 	ping       Route = "/ping"
-	query      Route = "/query"
+	query      Route = "/query?id=%s"
 )
 
 func New(baseUrl, token, id string, config *ClientConfig) *Client {
@@ -160,29 +160,27 @@ func (c *Client) ping() error {
 	return nil
 }
 
-// Query queries all available IDs with addresses
-func (c *Client) Query() (map[string]string, error) {
-	var entries map[string]string
-
-	req, err := http.NewRequest(http.MethodGet, c.getUrl(query), nil)
+// Query queries Maestro for the info on the specified ID
+func (c *Client) Query(id string) (Registrant, error) {
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(c.getUrl(query), id), nil)
 	if err != nil {
-		return nil, err
+		return Registrant{}, err
 	}
-
 	c.addAuthHeader(req)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return nil, err
+		return Registrant{}, err
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&entries)
+	var entry Registrant
+	err = json.NewDecoder(resp.Body).Decode(&entry)
 	if err != nil {
-		return nil, err
+		return Registrant{}, err
 	}
 
-	return entries, nil
+	return entry, nil
 }
 
 func (c *Client) addAuthHeader(r *http.Request) {
