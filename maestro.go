@@ -164,20 +164,20 @@ func (c *Client) ping() error {
 func (c *Client) Query(id string) (Registrant, error) {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf(c.getUrl(query), id), nil)
 	if err != nil {
-		return Registrant{}, err
+		return Registrant{}, fmt.Errorf("could not create request: %s", err.Error())
 	}
 	c.addAuthHeader(req)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return Registrant{}, err
+		return Registrant{}, fmt.Errorf("could not execute query request: %s", err.Error())
 	}
 	defer resp.Body.Close()
 
 	var entry Registrant
 	err = json.NewDecoder(resp.Body).Decode(&entry)
 	if err != nil {
-		return Registrant{}, err
+		return Registrant{}, fmt.Errorf("could not decode JSON: %s", err.Error())
 	}
 
 	return entry, nil
