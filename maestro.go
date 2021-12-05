@@ -46,7 +46,9 @@ func New(baseUrl, token, id string, config *ClientConfig) *Client {
 
 	if config != nil {
 		// set HTTP client timeout
-		httpClient.Timeout = config.Timeout
+		if config.Timeout > 10*time.Millisecond {
+			httpClient.Timeout = config.Timeout
+		}
 		// set custom transport
 		if config.Transport != nil {
 			httpClient.Transport = config.Transport
