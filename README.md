@@ -45,4 +45,5 @@ ctx, cancel := context.WithCancel(context.Background())
 go client.StartPing(ctx, 30*time.Second)
 ```
 
-
+If no ping is sent out within a certain interval (configurable on Maestro's side) the 
+registered app is considered dead and will be removed from the registry.
