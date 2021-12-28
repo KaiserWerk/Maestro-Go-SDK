@@ -24,7 +24,7 @@ err := client.Register("http://app-url")
 Similarly, you can deregister easily:
 
 ```golang
-// deregisters the running app with the Maestro service
+// deregisters the running app with the Maestro service, e.g. for preparing to shut down/restart
 err := client.Deregister()  
 ```
 
@@ -46,4 +46,4 @@ go client.StartPing(ctx, 30*time.Second)
 ```
 
 If no ping is sent out within a certain interval (configurable on Maestro's side) the 
-registered app is considered dead and will be removed from the registry.
+registered app is considered dead and will be removed from the registry; future pings will fail.
