@@ -12,10 +12,10 @@ import (
 
 type (
 	Client struct {
-		baseUrl   string
-		authToken string
-		id        string
-		client    *http.Client
+		BaseUrl   string
+		AuthToken string
+		Id        string
+		Client    *http.Client
 	}
 	ClientConfig struct {
 		Timeout   time.Duration
@@ -42,7 +42,7 @@ const (
 
 func New(baseUrl, token, id string, config *ClientConfig) *Client {
 	httpClient := &http.Client{Timeout: 3 * time.Second}
-	c := Client{baseUrl: strings.TrimSuffix(baseUrl, "/"), authToken: token, id: id}
+	c := Client{BaseUrl: strings.TrimSuffix(baseUrl, "/"), AuthToken: token, Id: id}
 
 	if config != nil {
 		// set HTTP client timeout
@@ -55,7 +55,7 @@ func New(baseUrl, token, id string, config *ClientConfig) *Client {
 		}
 	}
 
-	c.client = httpClient
+	c.Client = httpClient
 
 	return &c
 }
@@ -64,7 +64,7 @@ func New(baseUrl, token, id string, config *ClientConfig) *Client {
 // with the registry
 func (c *Client) Register(address string) error {
 	reg := Registrant{
-		Id:      c.id,
+		Id:      c.Id,
 		Address: address,
 	}
 
@@ -80,7 +80,7 @@ func (c *Client) Register(address string) error {
 
 	c.addAuthHeader(req)
 
-	resp, err := c.client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ func (c *Client) Register(address string) error {
 // Deregister removes the service from the registry
 func (c *Client) Deregister() error {
 	reg := Registrant{
-		Id:      c.id,
+		Id:      c.Id,
 		Address: "",
 	}
 
@@ -112,7 +112,7 @@ func (c *Client) Deregister() error {
 
 	c.addAuthHeader(req)
 
-	resp, err := c.client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -143,14 +143,14 @@ func (c *Client) StartPing(ctx context.Context, interval time.Duration) {
 }
 
 func (c *Client) ping() error {
-	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("%s?id=%s", c.getUrl(ping), c.id), nil)
+	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("%s?id=%s", c.getUrl(ping), c.Id), nil)
 	if err != nil {
 		return err
 	}
 
 	c.addAuthHeader(req)
 
-	resp, err := c.client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func (c *Client) Query(id string) (Registrant, error) {
 	}
 	c.addAuthHeader(req)
 
-	resp, err := c.client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return Registrant{}, fmt.Errorf("could not execute query request: %s", err.Error())
 	}
@@ -186,9 +186,9 @@ func (c *Client) Query(id string) (Registrant, error) {
 }
 
 func (c *Client) addAuthHeader(r *http.Request) {
-	r.Header.Add(authHeader, c.authToken)
+	r.Header.Add(authHeader, c.AuthToken)
 }
 
 func (c *Client) getUrl(r Route) string {
-	return c.baseUrl + apiPrefix + string(r)
+	return c.BaseUrl + apiPrefix + string(r)
 }
