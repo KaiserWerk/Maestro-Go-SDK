@@ -134,7 +134,7 @@ func (c *Client) StartPing(ctx context.Context, interval time.Duration) {
 		case <-ctx.Done():
 			return
 		case <-t.C:
-			if err := c.ping(); err != nil {
+			if err := c.Ping(); err != nil {
 				fmt.Println("ping error: " + err.Error())
 			}
 		default:
@@ -142,7 +142,7 @@ func (c *Client) StartPing(ctx context.Context, interval time.Duration) {
 	}
 }
 
-func (c *Client) ping() error {
+func (c *Client) Ping() error {
 	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("%s?id=%s", c.getUrl(ping), c.Id), nil)
 	if err != nil {
 		return err
