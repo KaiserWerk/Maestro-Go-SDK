@@ -137,7 +137,6 @@ func (c *Client) StartPing(ctx context.Context, interval time.Duration) {
 			if err := c.Ping(); err != nil {
 				fmt.Println("ping error: " + err.Error())
 			}
-		default:
 		}
 	}
 }
