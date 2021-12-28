@@ -68,7 +68,7 @@ func (c *Client) Register(address string) error {
 		Address: address,
 	}
 
-	regJson, err := json.MarshalIndent(reg, "", "  ")
+	regJson, err := json.Marshal(reg)
 	if err != nil {
 		return err
 	}
@@ -100,7 +100,7 @@ func (c *Client) Deregister() error {
 		Address: "",
 	}
 
-	regJson, err := json.MarshalIndent(reg, "", "  ")
+	regJson, err := json.Marshal(reg)
 	if err != nil {
 		return err
 	}
