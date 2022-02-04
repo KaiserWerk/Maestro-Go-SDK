@@ -1,4 +1,7 @@
 # Maestro Go SDK
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/KaiserWerk/Maestro-Go-SDK.svg)](https://pkg.go.dev/github.com/KaiserWerk/Maestro-Go-SDK)
+
 The Golang SDK for the [Maestro](https://github.com/KaiserWerk/Maestro) Service Discovery API.
 
 ## Usage
